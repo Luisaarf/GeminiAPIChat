@@ -1,38 +1,41 @@
-import {useState} from 'react';
-import './index.css';
+import {useState} from 'react'; //importa o hook useState do pacote react
+import './index.css'; 
 
 function App() {
-  const [valueInput, setValueInput] = useState('')
+  const [valueInput, setValueInput] = useState('')   // gerenciamento de estado
   const [error, setError] = useState('')
   const [chatHistory, setChatHistory] = useState([])
 
+  // função assíncrona que faz uma requisição POST para o servidor
   const getResponse = async (message) => {
-    if (!valueInput){
-      setError('Please enter a message');
-      return; 
+    if (!valueInput){ //se o valor do input for vazio 
+      setError('Please enter a message'); //exibe a mensagem de erro
+      return;  //encerra a função com um retorno
     }
-    try{
+    try{ //tenta executar o bloco de código
 
-      const options = {
-        method: 'POST',
-        body: JSON.stringify({
-          history: chatHistory,
-          message: valueInput
+      const options = {  //opções da requisição
+        method: 'POST', //método POST
+        body: JSON.stringify({ //corpo da requisição com: 
+          history: chatHistory, //histórico de chat
+          message: valueInput //mensagem
         }),
-        headers: {
-          'Content-Type': 'application/json'
+        headers: { //cabeçalho da requisição
+          'Content-Type': 'application/json' //tipo de conteúdo é JSON
         }
       }
+      //faz a requisição para o servidor enviando a url e o objeto options
       const response = await fetch('http://localhost:8000/gemini', options);
-      const data = await response.text();
+      const data = await response.text(); //espera a resposta e converte para texto
       console.log('data:', data)
+      //atualiza o estado do chatHistory adicionando novos valores e zera o input
       setChatHistory( oldChatHistory => [...oldChatHistory, 
         {role: 'user', parts: [{text : valueInput} ] }, 
         {role: 'model', parts: [{text : data} ]} 
       ])
       setValueInput('')
 
-    }catch(error){
+    }catch(error){ //captura um erro
       console.error('error:', error)
       setError('Something went wrong :( Please try again later.')
     }
@@ -43,8 +46,8 @@ function App() {
     setError('')
     setChatHistory([])
   }
-
-  return (
+  //retorna o JSX
+  return ( 
     <div className="App">
         <p>Chat with me</p>
       <div className='input-container'>
@@ -58,7 +61,7 @@ function App() {
         {error && <button onClick={clear}>Clear</button>}
       </div>
       {error && <p className='error-message'>{error}</p>}
-      <div className='search-result'>
+      <div className='search-result'> 
         {chatHistory.map((chatItem, _index) => {
           {console.log('chatItem:', chatItem)
             console.log('chatItem.role:', chatItem.role)
