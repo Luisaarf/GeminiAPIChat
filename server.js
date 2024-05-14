@@ -24,7 +24,7 @@ app.listen(PORT, () => {
 // quando uma solicitação é feita, inicia-se uma função assíncrona
 // os parâmetros req e res são objetos que representam a requisição e a resposta HTTP
 app.post('/gemini', async (req, res) => {
-    const model = genAI.getGenerativeModel({ model: 'gemini-pro'});
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro-latest'});
     // obtendo o modelo generativo Gemini Pro
     // iniciando a conversa com o modelo
     const chat = model.startChat({
